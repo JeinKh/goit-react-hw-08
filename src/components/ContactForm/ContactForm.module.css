@@ -34,7 +34,12 @@
 
 .btn {
   display: block;
-  background-color: rgb(54, 193, 98);
+  background-color: #1e9f28;
   color: azure;
-  width: 200px;
+  width: 160px;
+  height: 40px;
+  border: none;
+  border-radius: 8px;
+  font-size: 18px;
+  font-weight: 600;
 }

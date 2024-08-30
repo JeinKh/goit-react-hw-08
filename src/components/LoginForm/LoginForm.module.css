@@ -1,0 +1,24 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  margin-top: 50px;
+}
+
+.input {
+  border-radius: 8px;
+  width: 320px;
+  height: 32px;
+  border: 1px solid #191919;
+}
+
+.button {
+  background-color: #1e9f28;
+  width: 160px;
+  height: 40px;
+  border: none;
+  color: #fff;
+  font-size: 18px;
+  font-weight: 600;
+  border-radius: 8px;
+}

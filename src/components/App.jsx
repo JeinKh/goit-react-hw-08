@@ -1,27 +1,61 @@
-import ContactForm from "./ContactForm/ContactForm";
-import SearchBox from "./SearchBox/SearchBox";
-import ContactList from "./ContactList/ContactList";
 import { useDispatch, useSelector } from "react-redux";
-import { useEffect } from "react";
-import { fetchContacts } from "../redux/contactsOps";
-import { selectIsError, selectIsLoading } from "../redux/selector";
+import Layout from "./Layout/Layout";
+import { useEffect, lazy } from "react";
+import PrivateRoute from "./PrivateRoute/PrivateRoute";
+import { Routes, Route } from "react-router-dom";
+import PublicRoute from "./PublicRoute/PublicRoute";
+
+import Loader from "./Loader/Loader";
+import { selectIsRefreshing } from "../redux/auth/selectors";
+import { RefreshUserThunk } from "../redux/auth/operations";
+
+const HomePage = lazy(() => import("../pages/Home/HomePage"));
+const RegisterPage = lazy(() => import("../pages/Register/RegisterPage"));
+const LoginPage = lazy(() => import("../pages/Login/LoginPage"));
+const ContactsPage = lazy(() => import("../pages/Contacts/ContactsPage"));
+
 const App = () => {
   const dispatch = useDispatch();
-  const isLoading = useSelector(selectIsLoading);
-  const isError = useSelector(selectIsError);
+
+  const isRefreshing = useSelector(selectIsRefreshing);
 
   useEffect(() => {
-    dispatch(fetchContacts());
+    dispatch(RefreshUserThunk());
   }, [dispatch]);
-  return (
-    <div>
-      <h1>Phonebook</h1>
-      <ContactForm />
-      <SearchBox />
-      <ContactList />
-      {isLoading && <h1>Loading...</h1>}
-      {isError && <h2>Something went wrong!</h2>}
-    </div>
+  return isRefreshing ? (
+    <Loader />
+  ) : (
+    <>
+      <Routes>
+        <Route path="/" element={<Layout />}>
+          <Route index element={<HomePage />} />
+          <Route
+            path="contacts"
+            element={
+              <PublicRoute>
+                <ContactsPage />
+              </PublicRoute>
+            }
+          />
+          <Route
+            path="/login"
+            element={
+              <PrivateRoute>
+                <LoginPage />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/register"
+            element={
+              <PrivateRoute>
+                <RegisterPage />
+              </PrivateRoute>
+            }
+          />
+        </Route>
+      </Routes>
+    </>
   );
 };
 
